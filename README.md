@@ -11,10 +11,10 @@ should be an "interactive" user. System users like httpd may not work because
 of how rsync works, you may not also be able to execute sudo commands.
 
 The whole role shall be ran as the target (owner) user, meaning the the user which you use
-to ssh into the target. `become_user` should also work but is not tested yet.
+to ssh into the machine. `become_user` should also work but is not tested yet.
  
-The target directory (`deploy_project_home`) must exist prior to running this role. Also it's
-owner has to be the target user.
+The app directory (`deploy_project_home`) must exist prior to running this role. Also it's
+owner has to be the app user.
 
 ## Example (minimal) playbook
 
