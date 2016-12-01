@@ -1,0 +1,6 @@
+- name: Execute post install commands
+  shell: "{{ item }}"
+  args:
+    chdir: "{{ deploy_next_release_path }}"
+  with_items: "{{ deploy_post_install_commands }}"
+

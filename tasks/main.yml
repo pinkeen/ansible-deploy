@@ -5,5 +5,6 @@
 - include: install_configs.yml
 - include: link_shared_dirs.yml
 - include: ensure_permissions.yml
+- include: post_install.yml
 - include: relink_releases.yml
 - include: post_deploy.yml

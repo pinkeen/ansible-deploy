@@ -13,5 +13,6 @@ deploy_config_files: []
 deploy_rsync_opts: []
 
 deploy_use_acl: True
-deploy_restart_services: []
-deploy_reload_services: []
+
+deploy_post_install_commands: []
+deploy_post_deploy_commands: []
