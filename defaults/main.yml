@@ -1,14 +1,17 @@
----
-deploy:
-  project:
-    root: '/tmp'
-    name: 'Default Name'
-    scm: 'git'
-    repo: 'repo addres'
-    branch: 'master'
-    keep_previous_releases: 3
-    writable_dirs: []
-    shared_dirs: []
-    shared_files: []
-    templated_files: []
-    rsync_opts: []
+deploy_releases_dir: "{{ deploy_project_home }}/releases"
+deploy_shared_dir: "{{ deploy_project_home }}/shared"
+deploy_current_release_dir: "{{ deploy_project_home }}/current"
+deploy_previous_release_dir: "{{ deploy_project_home }}/previous"
+deploy_copy_previous_release: True
+
+deploy_method: git
+deploy_git_branch: master
+deploy_keep_previous_releases: 3
+deploy_server_writable_dirs: []
+deploy_shared_dirs: []
+deploy_config_files: []
+deploy_rsync_opts: []
+
+deploy_use_acl: True
+deploy_restart_services: []
+deploy_reload_services: []

@@ -1,39 +1,43 @@
-- name: Register release variable
+- name: Compute release id
   shell: date +%Y%m%d%H%M%S
-  register: project_deploy_date
+  register: deploy_release_id_result
 
+- name: Register release id
+  set_fact:
+    deploy_release_id: "{{ deploy_release_id_result.stdout }}"
+
+- name: Set path of next realease
+  set_fact:
+    deploy_next_release_path: "{{ deploy_releases_dir }}/{{ deploy_release_id }}"
 
 - name: Check if current release exists
-  shell: readlink "{{deploy.project.root}}/current"
-  register: checking_result
+  shell: readlink "{{ deploy_current_release_dir }}"
+  register: current_release_dir_check
   ignore_errors: yes
 
-- name: Register fact - Current relese exists
+- name: Set path of current release
   set_fact:
-      current_release_exists: true
-  when: checking_result.failed is not defined
+    deploy_current_release_path: "{{ current_release_dir_check.stdout }}"
+  when: current_release_dir_check.failed is not defined
 
-- name: Register fact - Current relese don't exists
+## Users
+# We use this method instead of {{ ansible_user }} because it will lie if `become` is used
+- name: Obtain remote app user
+  shell: whoami
+  register: deploy_app_user_check
+  when: deploy_app_user is not defined
+
+- name: Set remote app user
   set_fact:
-      current_release_exists: false
-  when: checking_result.failed is defined
+    deploy_app_user: "{{ deploy_app_user_check.stdout }}"
+  when: deploy_app_user is not defined
 
-- name: Register path of current release
+- name: Obtain server user
+  shell: ps axo user,comm | grep -E '[a]pache|[h]ttpd|[_]www|[w]ww-data|[n]ginx' | grep -v root | head -1 | cut -d ' ' -f 1
+  register: deploy_server_user_check
+  when: deploy_server_user is not defined
+
+- name: Set server user
   set_fact:
-    current_release_path: "{{ checking_result.stdout }}"
-  when: current_release_exists
-
-- name: Register last basename
-  shell: echo $(basename {{ current_release_path }})
-  register: last_release
-  when: current_release_exists
-
-- name: Create variable.
-  set_fact:
-    next_release: "{{ project_deploy_date.stdout }}"
-
-- name: Create variable.
-  set_fact:
-    current_release: "{{ last_release.stdout }}"
-  when: current_release_exists
-
+    deploy_server_user: "{{ deploy_server_user_check.stdout }}"
+  when: deploy_server_user is not defined

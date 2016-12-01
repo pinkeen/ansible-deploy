@@ -1,0 +1,20 @@
+- name: Link previous release
+  file:
+    state: link
+    force: yes
+    dest: "{{ deploy_previous_release_dir }}"
+    src: "{{ deploy_current_release_path }}"
+  when: deploy_current_release_path is defined
+
+- name: Link current realease
+  file:
+    state: link
+    force: yes
+    dest: "{{ deploy_current_release_dir }}"
+    src: "{{ deploy_next_release_path }}"
+
+# The if check is just a precaution in case something is wrong with the realease ids and they are not sorted properly
+- name: Remove archival releases
+  shell: "ls -1 | sort -r | grep '^[0-9]\\+' | awk 'NR>{{ deploy_keep_previous_releases }}' | while read rls ; do if [[ ! \"$rls\" == \"{{ deploy_release_id }}\" ]] ; then rm -rf \"$rls\" ; fi ; done"
+  args:
+    chdir: "{{ deploy_releases_dir }}"

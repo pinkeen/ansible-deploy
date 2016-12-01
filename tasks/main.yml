@@ -1,7 +1,10 @@
----
+- include: preconditions.yml
 - include: register_variables.yml
-- include: handle_previous.yml
-- include: pull_repository.yml
-- include: templated_files.yml
-- include: link_shared.yml
-- include: ensure_writables.yml
+
+- include: create_directories.yml
+- include: install_artifact.yml
+- include: install_configs.yml
+- include: link_shared_dirs.yml
+- include: ensure_permissions.yml
+- include: relink_releases.yml
+- include: post_deploy.yml

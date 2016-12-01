@@ -1,0 +1,26 @@
+- name: Copy previous artifact to speed up rsync
+  command: "cp -r '{{ deploy_current_release_path }}' '{{ deploy_artifact_temp_dir }}'"
+  ignore_errors: yes
+  when: deploy_current_release_path is defined and deploy_copy_previous_release and deploy_method == 'rsync'
+
+- name: Clone repository as an artifact
+  git:
+    repo: "{{ deploy_git_repo }}"
+    dest: "{{ deploy_artifact_temp_dir }}"
+    version: "{{ deploy_git_branch }}"
+    depth: 1
+    accept_hostkey: yes
+  when: deploy_method == 'git'
+
+- name: Copying from local source
+  synchronize:
+    src: "{{ deploy_artifact_src_dir }}"
+    dest: "{{ deploy_artifact_temp_dir }}"
+    owner: no
+    group: no
+    delete: yes
+    rsync_opts: "{{ deploy_rsync_opts }}"
+  when: deploy_method == "rsync"
+
+- name: Install artifact as next release
+  command: "mv {{ deploy_artifact_temp_dir }} {{ deploy_next_release_path }}"

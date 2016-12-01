@@ -1,0 +1,3 @@
+deploy_artifact_temp_dir: /tmp/deploy_artifact
+deploy_required_variables:
+    - deploy_project_home

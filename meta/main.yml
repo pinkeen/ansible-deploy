@@ -1,14 +1,25 @@
----
-galaxy_info:
-  author: Jakub Kanclerz
-  description: An Ansible for deploy project.
-  company: Jakub Kanclerz.
-  license: Apache
-  min_ansible_version: 1.8
-  platforms:
-  - name: Centos
-    versions:
-    - 6.4
-  categories:
-  - deployment
 dependencies: []
+
+galaxy_info:
+    author: Filip sobalski
+    description: Deploys web app using ansible
+    company: creativestyle
+    license: MIT
+    min_ansible_version: 2.1
+    platforms:
+        - name: EL
+          versions:
+            - 6
+            - 7
+        - name: Ubuntu
+          versions:
+            - all
+        - name: Debian
+          versions:
+            - all
+    galaxy_tags:
+        - deploy
+        - web
+        - rsync
+        - git
+

@@ -1,0 +1,20 @@
+- name: Check required variables
+  fail:
+    msg: "The variable '{{ item }}' is required"
+  when: "{{ hostvars[inventory_hostname][item] is undefined }}"
+  with_items: "{{ deploy_required_variables }}"
+
+- name: Check required rsync variables
+  fail:
+    msg: "The variable '{{ item }}' is required when using 'deploy_method: rsync'"
+  when: "{{ deploy_method == 'rsync' and hostvars[inventory_hostname][item] is undefined }}"
+  with_items:
+    - deploy_artifact_src_dir
+
+- name: Check required git variables
+  fail:
+    msg: "The variable '{{ item }}' is required when using 'deploy_method: git'"
+  when: "{{ deploy_method == 'git' and hostvars[inventory_hostname][item] is undefined }}"
+  with_items:
+    - deploy_git_repo
+
