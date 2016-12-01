@@ -11,14 +11,15 @@
     deploy_next_release_path: "{{ deploy_releases_dir }}/{{ deploy_release_id }}"
 
 - name: Check if current release exists
-  shell: readlink "{{ deploy_current_release_dir }}"
+  stat:
+    path: "{{ deploy_current_release_dir }}"
+    follow: true
   register: current_release_dir_check
-  ignore_errors: yes
 
 - name: Set path of current release
   set_fact:
-    deploy_current_release_path: "{{ current_release_dir_check.stdout }}"
-  when: current_release_dir_check.failed is not defined
+    deploy_current_release_path: "{{ current_release_dir | realpath }}"
+  when: current_release_dir_check.isdir is defined and current_release_dir_check.isdir
 
 ## Users
 # We use this method instead of {{ ansible_user }} because it will lie if `become` is used

@@ -1,6 +1,5 @@
 - include: preconditions.yml
 - include: register_variables.yml
-
 - include: create_directories.yml
 - include: install_artifact.yml
 - include: install_configs.yml
