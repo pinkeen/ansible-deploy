@@ -16,10 +16,14 @@
     follow: true
   register: current_release_dir_check
 
+- name: Get real path of the current release
+  command: "readlink -f {{ deploy_current_release_dir }}"
+  register: current_release_dir_readlink
+
 - name: Set path of current release
   set_fact:
-    deploy_current_release_path: "{{ current_release_dir | realpath }}"
-  when: current_release_dir_check.isdir is defined and current_release_dir_check.isdir
+    deploy_current_release_path: "{{ current_release_dir_readlink.stdout }}"
+  when: current_release_dir_check.stat.isdir is defined and current_release_dir_check.stat.isdir
 
 ## Users
 # We use this method instead of {{ ansible_user }} because it will lie if `become` is used

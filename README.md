@@ -8,13 +8,16 @@ It should run on any linux target.
 
 The assumption is made that the application is owned by a specific user, which 
 should be an "interactive" user. System users like httpd may not work because
-of how rsync works, you may not also be able to execute sudo commands.
+of how rsync works, you may not also be able to execute sudo commands (no sudo without tty).
 
-The whole role shall be ran as the target (owner) user, meaning the the user which you use
+The whole role shall be ran as the app (owner) user, meaning the the user which you use
 to ssh into the machine. `become_user` should also work but is not tested yet.
+
+The rationale is that for deploy you do not use root access so you do not need to grant
+it to people/machines running deploys. Hell, sometimes you are not granted root yourself.
  
-The app directory (`deploy_project_home`) must exist prior to running this role. Also it's
-owner has to be the app user.
+The app directory (`deploy_project_home`) must exist prior to running this role or must
+be creatable for the app user.
 
 ## Example (minimal) playbook
 
@@ -121,7 +124,18 @@ It's highly encouraged to leave this at `True` if possible.
 
 If set to `False`, then the target user is added to the webserver group.
 The writable dirs get rwx permissions (with group bit set) for this group.
-Your application has to use `002` mask if you don't use ACL. 
+
+Your application has to use `002` mask in both cases.
+
+Also the app user should have `002` umask which is default in most linux
+distros for normal users.
+
+Even if ACL is used having the group non-writable breaks tha ACL mask -
+newly (server) created files won't be writable by the user.
+
+For sensitive configuration files you should consider setting 600 although
+this is not yet supported by the role. They will not be writable by
+the server tough.
 
 ### `deploy_server_user: (guessed)`
 
@@ -148,7 +162,7 @@ switched to live.
 
 Typically you will want to reload the webserver, supervisord, ... here.
 
-Note that you are running the role as a normal user!
+_Note that you are running the role as a normal user!_
 
 If your commands require root then you have to take care of that. The best way
 would be to use sudo and add special sudoers entries for this user.

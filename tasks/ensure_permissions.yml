@@ -10,28 +10,25 @@
     follow: yes
     recurse: yes
     path: "{{ deploy_next_release_path }}/{{ item }}"
-    owner: "{{ deploy_app_user }}"
     group: "{{ deploy_server_user }}"
     mode: u=rwx,g=rwxs
   with_items: "{{ deploy_server_writable_dirs }}"
   when: not deploy_use_acl
 
-- name: Ensure owner is app user
+- name: Ensure directories exist
   file:
     state: directory
     follow: yes
     recurse: yes
     path: "{{ deploy_next_release_path }}/{{ item }}"
-    owner: "{{ deploy_app_user }}"
-    group: "{{ deploy_app_user }}"
-    mode: 0755
+#    mode: 0775
   with_items: "{{ deploy_server_writable_dirs }}"
   when: deploy_use_acl
 
 - name: Set acl permissions for server writable dirs
   shell:
-    find {{ deploy_next_release_path }}/{{ item }} -type d -exec setfacl -m u:{{ deploy_server_user }}:rwx,d:u:{{ deploy_server_user }}:rwx,u:{{ deploy_app_user }}:rwx,d:u:{{ deploy_app_user }}:rwx {{ '{}' }} \; &&
-    find {{ deploy_next_release_path }}/{{ item }} -type f -exec setfacl -m u:{{ deploy_server_user }}:rw,d:u:{{ deploy_app_user }}:rw {{ '{}' }} \;
+    find {{ deploy_next_release_path }}/{{ item }}/ -type d -exec setfacl -m u:{{ deploy_server_user }}:rwx,d:u:{{ deploy_server_user }}:rwx,u:{{ deploy_app_user }}:rwx,d:u:{{ deploy_app_user }}:rwx,m::rwx {{ '{}' }} \; &&
+    find {{ deploy_next_release_path }}/{{ item }}/ -type f -exec setfacl -m u:{{ deploy_server_user }}:rw,d:u:{{ deploy_app_user }}:rw,m::rw {{ '{}' }} \;
   when: deploy_use_acl
   with_items: "{{ deploy_server_writable_dirs }}"
 

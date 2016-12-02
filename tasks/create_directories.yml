@@ -1,7 +1,10 @@
 - name: Create vital directories
   file:
     state: directory
+    mode: 0755
     path: "{{ item }}"
   with_items:
+    - "{{ deploy_project_home }}"
     - "{{ deploy_releases_dir }}"
     - "{{ deploy_shared_dir }}"
+

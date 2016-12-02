@@ -18,6 +18,7 @@
     dest: "{{ deploy_artifact_temp_dir }}"
     owner: no
     group: no
+    perms: no
     delete: yes
     rsync_opts: "{{ deploy_rsync_opts }}"
   when: deploy_method == "rsync"
