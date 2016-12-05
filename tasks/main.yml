@@ -2,8 +2,8 @@
 - include: register_variables.yml
 - include: create_directories.yml
 - include: install_artifact.yml
-- include: install_configs.yml
 - include: link_shared_dirs.yml
+- include: install_configs.yml
 - include: ensure_permissions.yml
 - include: post_install.yml
 - include: relink_releases.yml
