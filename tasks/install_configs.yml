@@ -1,5 +1,0 @@
-- name: Install config files
-  template: 
-    src: "{{ item.src }}"
-    dest: "{{ deploy_next_release_path }}/{{ item.dest }}"
-  with_items: "{{ deploy_config_files }}"

@@ -10,6 +10,7 @@ deploy_keep_previous_releases: 3
 deploy_server_writable_dirs: []
 deploy_shared_dirs: []
 deploy_config_files: []
+deploy_assets: []
 deploy_rsync_opts: []
 
 deploy_use_acl: True
