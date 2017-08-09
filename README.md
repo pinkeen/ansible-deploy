@@ -155,6 +155,13 @@ The commands are executed in the application (current release) directory.
 
 Typically this will be stuff like clearing cache, running migrations...
 
+### `deploy_master_post_install_commands: []`
+
+The same as `deploy_post_install_commands`. This is useful if you're doing a multi web node
+deployment and there are certain commands which should only be executed on a single node (like db migrations).
+
+Having a separate var for this makes it way easier because variable scope/override in ansible can be problematic.
+
 ### `deploy_post_deploy_commands: []`
 
 Commands that are ran after the app has been installed and the directory (symlink)

@@ -17,3 +17,4 @@ deploy_use_acl: True
 
 deploy_post_install_commands: []
 deploy_post_deploy_commands: []
+deploy_master_post_install_commands: []

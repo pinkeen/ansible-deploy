@@ -4,3 +4,8 @@
     chdir: "{{ deploy_next_release_path }}"
   with_items: "{{ deploy_post_install_commands }}"
 
+- name: Execute post install commands (main/master node)
+  shell: "{{ item }}"
+  args:
+    chdir: "{{ deploy_next_release_path }}"
+  with_items: "{{ deploy_master_post_install_commands }}"
