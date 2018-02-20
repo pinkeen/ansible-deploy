@@ -1,3 +1,13 @@
+- name: Create temporary build directory
+  tempfile:
+    state: directory
+    suffix: build
+  register: _deploy_temp_dir
+
+- name: Set build directory path fact
+  set_fact:
+    deploy_artifact_temp_dir: "{{ _deploy_temp_dir.path }}"
+
 - name: Copy previous artifact to speed up rsync
   command: "cp -r '{{ deploy_current_release_path }}' '{{ deploy_artifact_temp_dir }}'"
   ignore_errors: yes
