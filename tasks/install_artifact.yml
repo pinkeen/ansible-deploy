@@ -8,6 +8,12 @@
   set_fact:
     deploy_artifact_temp_dir: "{{ _deploy_temp_dir.path }}"
 
+- name: Ensure proper permissions of the build directory
+  file:
+    path: "{{ deploy_artifact_temp_dir }}"
+    mode: 0755
+
+
 - name: Copy previous artifact to speed up rsync
   command: "cp -r '{{ deploy_current_release_path }}' '{{ deploy_artifact_temp_dir }}'"
   ignore_errors: yes
