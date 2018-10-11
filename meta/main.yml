@@ -1,6 +1,7 @@
 dependencies: []
 
 galaxy_info:
+    role_name: deploy
     author: Filip sobalski
     description: Deploys web app using ansible
     company: creativestyle
