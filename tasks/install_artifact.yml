@@ -15,7 +15,7 @@
 
 
 - name: Copy previous artifact to speed up rsync
-  command: "cp -r '{{ deploy_current_release_path }}' '{{ deploy_artifact_temp_dir }}'"
+  command: "rsync -a --no-links --one-file-system -compress-level=0 --whole-file '{{ deploy_current_release_path }}/' '{{ deploy_artifact_temp_dir }}' {{ deploy_rsync_opts|join(' ') }}"
   ignore_errors: yes
   when: deploy_current_release_path is defined and deploy_copy_previous_release and deploy_method == 'rsync'
 
