@@ -120,9 +120,9 @@ Directories which will be made writable for the webserver.
 
 If true then ACL permissions are used for setting up the writable dirs.
 
-It's highly encouraged to leave this at `True` if possible.
+It's highly encouraged to leave this at `yes` if possible.
 
-If set to `False`, then the target user is added to the webserver group.
+If set to `False`, then you need to ensure web/app server has access to the appropriate dirs.
 The writable dirs get rwx permissions (with group bit set) for this group.
 
 Your application has to use `002` mask in both cases.
@@ -141,6 +141,19 @@ the server tough.
 
 The user/group which is used by your webserver. If no value is provided then the
 role tries to guess it by listing running processes.
+
+The webserver primarily will be the software that needs *read* access to the app web dir
+in order to also send the static asset files.
+
+If it's also the server running the app (e.g. apache + mod_php) then it will be given
+write access to `deploy_server_writable_dirs` (see: `deploy_app_server_user`).
+
+### `deploy_app_server_user: (same as deploy_server_user)`
+
+If you have a separate server app running the actual app code (e.g. php-fpm)
+and it runs as a user different than `deploy_server_user` set this variable appropriately.
+
+This is the user that need *write* access to the `deploy_server_writable_dirs`.
 
 ### `deploy_app_user: (guessed)`
 

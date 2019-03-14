@@ -46,3 +46,8 @@
   set_fact:
     deploy_server_user: "{{ deploy_server_user_check.stdout }}"
   when: deploy_server_user is not defined
+
+- name: Set app server user
+  set_fact:
+    deploy_app_server_user: "{{ deploy_server_user }}"
+  when: deploy_app_server_user is not defined

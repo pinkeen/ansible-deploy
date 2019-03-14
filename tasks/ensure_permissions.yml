@@ -1,35 +1,23 @@
-- name: Add user to server group
-  user:
-    name: "{{ deploy_app_user }}"
-    groups: "{{ deploy_server_user }}"
-  when: not deploy_use_acl
-
-- name: Ensure server write permissions
+- name: Ensure writable dirs
   file:
     state: directory
     follow: yes
     recurse: yes
+    mode: 0775
     path: "{{ deploy_next_release_path }}/{{ item }}"
-    group: "{{ deploy_server_user }}"
-    mode: u=rwx,g=rwxs
   with_items: "{{ deploy_server_writable_dirs }}"
-  when: not deploy_use_acl
 
-- name: Ensure directories exist
-  file:
-    state: directory
-    follow: yes
-    recurse: yes
-    path: "{{ deploy_next_release_path }}/{{ item }}"
-#    mode: 0775
-  with_items: "{{ deploy_server_writable_dirs }}"
-  when: deploy_use_acl
-
-- name: Set acl permissions for server writable dirs
+- name: Set acl permissions for app user for writable dirs
   shell:
-    find {{ deploy_next_release_path }}/{{ item }}/ -type d -exec setfacl -m u:{{ deploy_server_user }}:rwx,d:u:{{ deploy_server_user }}:rwx,u:{{ deploy_app_user }}:rwx,d:u:{{ deploy_app_user }}:rwx,m::rwx {{ '{}' }} \; &&
-    find {{ deploy_next_release_path }}/{{ item }}/ -type f -exec setfacl -m u:{{ deploy_server_user }}:rw,d:u:{{ deploy_app_user }}:rw,m::rw {{ '{}' }} \;
-  when: deploy_use_acl
+    find {{ deploy_next_release_path }}/{{ item }}/ -type d -exec setfacl -m u:{{ deploy_app_user }}:rwx,d:u:{{ deploy_app_user }}:rwx,m::rwx {{ '{}' }} \; &&
+    find {{ deploy_next_release_path }}/{{ item }}/ -type f -exec setfacl -m u:{{ deploy_app_user }}:rw,d:u:{{ deploy_app_user }}:rw,m::rw {{ '{}' }} \;
   with_items: "{{ deploy_server_writable_dirs }}"
+  when: deploy_use_acl
 
+- name: Set acl permissions for app server user for writable dirs
+  shell:
+    find {{ deploy_next_release_path }}/{{ item }}/ -type d -exec setfacl -m u:{{ deploy_app_server_user }}:rwx,d:u:{{ deploy_app_server_user }}:rwx,m::rwx {{ '{}' }} \; &&
+    find {{ deploy_next_release_path }}/{{ item }}/ -type f -exec setfacl -m u:{{ deploy_app_server_user }}:rw,d:u:{{ deploy_app_server_user }}:rw,m::rw {{ '{}' }} \;
+  when: deploy_use_acl and deploy_app_user != deploy_app_server_user
+  with_items: "{{ deploy_server_writable_dirs }}"
 
